@@ -22,13 +22,14 @@ export enum Alignment {
 
 export class Champion {
     name: string;
-    role: Role;
+    role: Role | undefined;
+    metaRoles: Role[];
     modifiers: Modifier[] = [];
     alignment: Alignment;
 
-    constructor(name: string, role: Role, alignment: Alignment) {
+    constructor(name: string, metaRoles: Role[], alignment: Alignment) {
         this.name = name;
-        this.role = role;
+        this.metaRoles = metaRoles;
         this.alignment = alignment;
         this.initRandomModifiers();
     }
@@ -36,6 +37,10 @@ export class Champion {
     private getRandomPercent(modifier: number = 1) {
         return Math.floor(Math.random() * 100) * modifier;
       }
+
+    setRole(role: Role) {
+        this.role = role;
+    }
 
     initRandomModifiers() {
         // Allies are inherently weaker than enemies to make the game challenging.

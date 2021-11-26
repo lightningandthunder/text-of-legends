@@ -1,3 +1,5 @@
+import { Role } from "../champions/classes";
+
 export function normalizeChampionName(name: string): string {
     const nameLower = name.toLowerCase()
         .replace(/\'/g, '')
@@ -30,4 +32,26 @@ export function normalizeChampionName(name: string): string {
     }
 
     return nameLower;
+}
+
+export function normalizeRole(role: string): Role | null {
+    const roleUpper = role.toUpperCase();
+
+    if (roleUpper === 'TOP') {
+        return Role.TOP;
+    }
+    if (['MIDDLE', 'MID'].indexOf(roleUpper) >= 0) {
+        return Role.MID;
+    }
+    if (['BOT', 'BOTTOM', 'ADC'].indexOf(roleUpper) >= 0) {
+        return Role.ADC;
+    }
+    if(['JUNGLE', 'JUNG', 'JNG', 'JG'].indexOf(roleUpper) >= 0) {
+        return Role.JNG;
+    }
+    if(['SUPPORT', 'SUP', 'SP', 'SUPT'].indexOf(roleUpper) >= 0) {
+        return Role.SUP;
+    }
+
+    return null;
 }
