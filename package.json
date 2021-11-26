@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "babel src --out-dir dist --extensions '.ts,.tsx' --watch",
     "build": "babel src --out-dir dist --extensions '.ts,.tsx'",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "start": "tsc && node src/index.js"
   },
   "author": "Mike Verducci",
   "license": "ISC",
@@ -17,5 +18,8 @@
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-typescript": "^7.15.0",
     "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "prompt": "^1.2.0"
   }
 }

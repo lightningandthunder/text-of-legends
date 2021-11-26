@@ -1,6 +1,7 @@
-import { Role } from "./classes"
+import { Role } from "./classes";
+import { normalizeChampionName } from "../utils/normalization";
 
-export default {
+export const champions: any = {
     Aatrox: [Role.TOP],
     Ahri: [Role.MID],
     Akali: [Role.MID, Role.TOP],
@@ -158,4 +159,10 @@ export default {
     Zilean: [Role.SUP],
     Zoe: [Role.MID],
     Zyra: [Role.MID, Role.SUP],
-}
+};
+
+export const championNamesNormalized: any = Object.keys(champions)
+    .reduce((accumulator, key) => {
+        const normalizedName = normalizeChampionName(key);
+        return { ...accumulator, [normalizedName]: key }
+    }, {});

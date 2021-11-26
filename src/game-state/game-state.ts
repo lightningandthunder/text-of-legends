@@ -1,4 +1,4 @@
-import { Champion } from "../champions/champions"
+import { Champion } from "../champions/classes"
 
 export default class GameState {
     allies: Champion[];
