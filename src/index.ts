@@ -1,3 +1,3 @@
-import { getChampionFromUser } from "./utils/utils";
+import { updateChampionFiles } from "./utils/utils";
 
-getChampionFromUser();
+(async () => updateChampionFiles())();

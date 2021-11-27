@@ -6,7 +6,7 @@ export interface ChampionData {
     roles: Role[]
 }
 
-export const CHAMPIONS: any = {
+export const CHAMPIONS: { [key: string]: Role[] } = {
     Aatrox: [Role.TOP],
     Ahri: [Role.MID],
     Akali: [Role.MID, Role.TOP],
