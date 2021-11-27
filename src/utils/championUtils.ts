@@ -1,10 +1,10 @@
 import * as prompt from 'prompt';
 import fs from 'fs';
 
-import { ChampionData, championNormalizationMap, CHAMPIONS } from "../champions/champions";
-import { Champion, Modifier, Role } from "../champions/classes";
+import { ChampionData, championNormalizationMap, CHAMPIONS } from '../champions/champions';
+import { Modifier, Role, Event } from '../classes/enums'
 import { arraysAreEquivalent } from './utils';
-import { Event } from '../champions/classes'
+import Champion from '../classes/champion';
 
 export function getChampDataFromUserInput(name: string): ChampionData | null {
     const properName = championNormalizationMap[name];

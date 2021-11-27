@@ -2,9 +2,11 @@ import fs from 'fs';
 import * as prompt from 'prompt';
 
 import { CHAMPIONS } from "../champions/champions";
-import { Champion, Alignment, Role } from "../champions/classes"
+
 import { getRandomObjectKey, getRandomArrayElement } from "../utils/utils";
 import { getChampionFromUser, teamfight } from "../utils/championUtils";
+import Champion from '../classes/champion';
+import { Alignment, Role } from '../classes/enums';
 
 export default class GameState {
     player: Champion | undefined;
