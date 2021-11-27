@@ -45,7 +45,7 @@ export function getRandomObjectKey(obj: any) {
 };
 
 export function getRandomArrayElement(arr: Array<any>) {
-    return Math.floor(Math.random() * arr.length);
+    return arr[Math.floor(Math.random() * arr.length)];
 }
 
 // Used to refresh the static JSON files in case the CHAMPIONS array is modified
@@ -64,7 +64,7 @@ export async function writeChampionFiles() {
     fs.writeFile('static/champions.json', JSON.stringify(CHAMPIONS), () => { });
 }
 
-function arraysAreEquivalent(arr1: any[], arr2: any[]) {
+export function arraysAreEquivalent(arr1: any[], arr2: any[]) {
     if (arr1 === undefined || arr2 === undefined) {
         return false;
     }

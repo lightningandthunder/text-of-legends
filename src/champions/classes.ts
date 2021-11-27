@@ -23,10 +23,10 @@ export enum Alignment {
 
 export class Champion {
     name: string;
-    role: Role | undefined;
-    metaRoles: Role[];
+    role: Role = Role.TOP;
+    metaRoles: Role[] = [];
     modifiers: Modifier[] = [];
-    alignment: Alignment | undefined;
+    alignment: Alignment = Alignment.ALLY;
     strength: number = 0;
 
     constructor(name: string, metaRoles: Role[]) {
