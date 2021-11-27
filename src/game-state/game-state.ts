@@ -25,6 +25,12 @@ export default class GameState {
 
         this.setAlliesAndEnemies(this.player);
 
+        teamfight(this.allies, this.enemies)
+        teamfight(this.allies, this.enemies, 5)
+        teamfight(this.allies, this.enemies, 1)
+        teamfight(this.allies, this.enemies, -2)
+        teamfight(this.allies, this.enemies, -5)
+
         return {
             player: { name: this.player.name, role: this.player.role },
             allies: this.allies.map(champ => { return { name: champ.name, role: champ.role } }),
@@ -47,25 +53,27 @@ export default class GameState {
 
     }
 
+    private advanceGameState() {
 
+    }
 
     private genFightOverScuttle() { }
     private genFightOverDrag() { }
     private genFightOverRift() { }
+    private genGankOpportunity() { }
     private genAlliesIgnoringDragon() { }
     private genAlliesIgnoringIncomingGank() { }
     private genGetGanked() { }
     private genAllyPingingHelp() { }
-    private genGankOpportunity() { }
     private genNothingHappening() { }
     private genFightOverNothing() { }
     private genAlliesLosingTeamfight() { }
     private genAlliesPushingLane() { }
+    private genEnemiesPushingLane() { }
     private genFightOverBaron() { }
     private genFightOverElder() { }
-    private genEnemiesGroupingLane() { }
-    private genEnemiesPushingBase() { }
     private genAlliesPushingBase() { }
+    private genEnemiesPushingBase() { }
 
     // TODO: make this DRY
     private setAlliesAndEnemies(playerChampion: Champion) {

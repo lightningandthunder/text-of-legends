@@ -55,22 +55,22 @@ export function teamfight(allies: Champion[], enemies: Champion[], initialAllyPo
                 let factor = 1;
 
                 if (champ.modifiers.indexOf(Modifier.CARELESS) >= 0) {
-                    factor -= .20;
+                    factor -= .35;
                 } else if (champ.modifiers.indexOf(Modifier.CAREFUL) >= 0) {
-                    factor += .20;
+                    factor += .35;
                 }
 
                 if (champ.modifiers.indexOf(Modifier.BAD) >= 0) {
-                    factor -= .15;
+                    factor -= .20;
                 } else if (champ.modifiers.indexOf(Modifier.GODLIKE) >= 0) {
-                    factor += .15;
+                    factor += .20;
                 }
 
                 return (
-                    arr.length
-                    * Math.random()
+                    (Math.random()
                     * factor
-                    * champ.getTraitEffects(Event.TEAMFIGHT_SETUP)
+                    * champ.getTraitEffects(Event.TEAMFIGHT_SETUP))
+                    + arr.length
                 );
             })
             .reduce((accumulator: number, current: number) => current + accumulator, 0);
@@ -80,11 +80,31 @@ export function teamfight(allies: Champion[], enemies: Champion[], initialAllyPo
     const enemyPositioning = reducer(enemies);
 
     // A positive number would mean an ally advantage and a negative number, an enemy advantage
-    let combatInitiationModifier = allyPositioning - enemyPositioning;
+    // Add 5% * this factor to strength for champions on the team with better position
+    const strengthFactor = 1 + (0.05 * Math.floor(allyPositioning - enemyPositioning));
+
+    console.log(`Initiating combat with modifier ${strengthFactor}`);
+
+    let allyDeaths: number = 0;
+    let enemyDeaths: number = 0;
+
+    const alliesSortedByWeakness = allies.sort((a, b) => a.strength - b.strength);
+    const enemiesSortedByWeakness = enemies.sort((a, b) => a.strength - b.strength);
+
+    console.log(alliesSortedByWeakness.map(c => c.modifiers).filter(m => m.length));
+    console.log(enemiesSortedByWeakness.map(c => c.modifiers).filter(m => m.length));
+
+    const strengthDifferential = (sumStrength(allies) * strengthFactor) - sumStrength(enemies);
+
+    console.log(`Strength differential ${strengthDifferential}`)
 
     // TODO:
     // Decide kills
-    // Record kills, deaths, and assists
+    // Record kills, deaths, and assists - assists can just go to teammates that didn't get the kill
+}
+
+export function sumStrength(arr: Champion[]): number {
+    return arr.map(c => c.strength).reduce((acc, current) => current + acc, 0);
 }
 
 export function normalizeChampionName(name: string): string {
@@ -139,10 +159,10 @@ export function normalizeRole(role: string): Role | null {
     if (['MIDDLE', 'MID'].indexOf(roleUpper) >= 0) {
         return Role.MID;
     }
-    if (['BOT', 'BOTTOM', 'ADC'].indexOf(roleUpper) >= 0) {
+    if (['BOT', 'BOTTOM', 'ADC', 'ADCARRY'].indexOf(roleUpper) >= 0) {
         return Role.ADC;
     }
-    if (['JUNGLE', 'JUNG', 'JNG', 'JG'].indexOf(roleUpper) >= 0) {
+    if (['JUNGLE', 'JUNG', 'JNG', 'JG', 'FILL'].indexOf(roleUpper) >= 0) {
         return Role.JNG;
     }
     if (['SUPPORT', 'SUP', 'SP', 'SUPT'].indexOf(roleUpper) >= 0) {
@@ -150,6 +170,10 @@ export function normalizeRole(role: string): Role | null {
     }
 
     return null;
+}
+
+export function getChampionByRole(champions: Champion[], role: Role): Champion | undefined {
+    return champions.find(c => c.role === role);
 }
 
 // Used to refresh the static JSON files in case the CHAMPIONS array is modified

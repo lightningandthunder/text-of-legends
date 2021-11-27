@@ -22,6 +22,7 @@ export enum Alignment {
 }
 
 export enum Event {
+    CHAMPION_INIT = 'CHAMPION_INIT',
     KILL = 'KILL',
     DEATH = 'DEATH',
     ASSIST = 'ASSIST',
@@ -31,13 +32,25 @@ export enum Event {
     SPLITPUSH = 'SPLITPUSH'
 }
 
+export enum Action {
+    START_FIGHT = 'START_FIGHT',
+    JOIN_FIGHT = 'JOIN_FIGHT',
+    RETREAT = 'RETREAT',
+    FARM = 'FARM',
+    PING_WARNING = 'PING_WARNING',
+    PING_GOING = 'PING_GOING',
+    TELEPORT = 'TELEPORT',
+    PUSH_OBJECTIVE = 'PUSH_OBJECTIVE'
+}
+
+
 export class Champion {
     name: string;
     role: Role = Role.TOP;
     metaRoles: Role[] = [];
     modifiers: Modifier[] = [];
     alignment: Alignment = Alignment.ALLY;
-    strength: number = 0;
+    strength: number = 5;
     kills: number = 0;
     deaths: number = 0;
     assists: number = 0;
@@ -55,7 +68,7 @@ export class Champion {
 
     setRole(role: Role) {
         this.role = role;
-        this.initRandomModifiers();
+        this.initModifiers();
         return this;
     }
 
@@ -94,7 +107,7 @@ export class Champion {
         return Math.floor(Math.random() * 100) * modifier;
     }
 
-    private initRandomModifiers() {
+    private initModifiers() {
         // Allies are inherently weaker than enemies to make the game challenging.
         // ...and more realistic?
         const modifier = this.alignment === Alignment.ALLY
@@ -107,8 +120,10 @@ export class Champion {
 
         // If you're playing off-meta and are not a skilled player, good luck!
         if (skillLevel < 80 && this.metaRoles.indexOf(this.role) < 0) {
-            this.strength = -20;
+            this.strength = 0;
         }
+
+        this.strength += this.getTraitEffects(Event.CHAMPION_INIT);
 
         const modifiers = [];
         if (this.alignment !== Alignment.PLAYER) {
