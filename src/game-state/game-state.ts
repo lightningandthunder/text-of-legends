@@ -1,14 +1,19 @@
-import { CHAMPIONS } from "../champions/champions";
 import fs from 'fs';
+import * as prompt from 'prompt';
 
+import { CHAMPIONS } from "../champions/champions";
 import { Champion, Alignment, Role } from "../champions/classes"
 import { getRandomObjectKey, getRandomArrayElement } from "../utils/utils";
-import { getChampionFromUser } from "../utils/championUtils";
+import { getChampionFromUser, teamfight } from "../utils/championUtils";
 
 export default class GameState {
     player: Champion | undefined;
     allies: Champion[] = [];
     enemies: Champion[] = [];
+    allyDragonsTaken: number = 0;
+    enemyDragonTakens: number = 0;
+    alliesBuffed = false;
+    enemiesBuffed = false;
 
     constructor() { }
 
@@ -37,6 +42,30 @@ export default class GameState {
     private startGameMid() {
 
     }
+
+    private generateScenario() {
+
+    }
+
+
+
+    private genFightOverScuttle() { }
+    private genFightOverDrag() { }
+    private genFightOverRift() { }
+    private genAlliesIgnoringDragon() { }
+    private genAlliesIgnoringIncomingGank() { }
+    private genGetGanked() { }
+    private genAllyPingingHelp() { }
+    private genGankOpportunity() { }
+    private genNothingHappening() { }
+    private genFightOverNothing() { }
+    private genAlliesLosingTeamfight() { }
+    private genAlliesPushingLane() { }
+    private genFightOverBaron() { }
+    private genFightOverElder() { }
+    private genEnemiesGroupingLane() { }
+    private genEnemiesPushingBase() { }
+    private genAlliesPushingBase() { }
 
     // TODO: make this DRY
     private setAlliesAndEnemies(playerChampion: Champion) {

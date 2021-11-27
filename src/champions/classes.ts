@@ -25,6 +25,7 @@ export enum Event {
     KILL = 'KILL',
     DEATH = 'DEATH',
     ASSIST = 'ASSIST',
+    TEAMFIGHT_SETUP = 'TEAMFIGHT_SETUP',
     TEAMFIGHT = 'TEAMFIGHT',
     SOLOFIGHT = 'SOLOFIGHT',
     SPLITPUSH = 'SPLITPUSH'
@@ -105,29 +106,27 @@ export class Champion {
         const skillLevel = this.getRandomPercent(modifier);
 
         // If you're playing off-meta and are not a skilled player, good luck!
-        if (skillLevel < 80
-            && this.role !== undefined
-            && this.metaRoles.indexOf(this.role) < 0) {
+        if (skillLevel < 80 && this.metaRoles.indexOf(this.role) < 0) {
             this.strength = -20;
         }
 
         const modifiers = [];
         if (this.alignment !== Alignment.PLAYER) {
-            if (friendliness < 30) {
+            if (friendliness < 20) {
                 modifiers.push(Modifier.CONTRARIAN);
-            } else if (friendliness > 80) {
+            } else if (friendliness > 85) {
                 modifiers.push(Modifier.FRIENDLY);
             }
 
-            if (care < 30) {
+            if (care < 20) {
                 modifiers.push(Modifier.CARELESS);
-            } else if (care > 80) {
+            } else if (care > 85) {
                 modifiers.push(Modifier.CAREFUL);
             }
 
-            if (skillLevel < 30) {
+            if (skillLevel < 20) {
                 modifiers.push(Modifier.BAD);
-            } else if (skillLevel > 80) {
+            } else if (skillLevel > 85) {
                 modifiers.push(Modifier.GODLIKE);
             }
         }

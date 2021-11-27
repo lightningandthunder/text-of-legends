@@ -4,6 +4,7 @@ import fs from 'fs';
 import { ChampionData, championNormalizationMap, CHAMPIONS } from "../champions/champions";
 import { Champion, Modifier, Role } from "../champions/classes";
 import { arraysAreEquivalent } from './utils';
+import { Event } from '../champions/classes'
 
 export function getChampDataFromUserInput(name: string): ChampionData | null {
     const properName = championNormalizationMap[name];
@@ -47,23 +48,43 @@ export async function getChampionFromUser(): Promise<{ data: ChampionData, selec
     return { data: data, selectedRole: selectedRole }
 }
 
-export function teamfight(allies: Champion[], enemies: Champion[]) {
+export function teamfight(allies: Champion[], enemies: Champion[], initialAllyPositionValue: number = 0) {
     const reducer = (arr: Champion[]) => {
         return arr
             .map(champ => {
-                return champ.modifiers.indexOf(Modifier.CARELESS) >= 0 || champ.modifiers.indexOf(Modifier.BAD) >= 0
-                    ? Math.random() * 50
-                    : Math.random() * 100;
+                let factor = 1;
+
+                if (champ.modifiers.indexOf(Modifier.CARELESS) >= 0) {
+                    factor -= .20;
+                } else if (champ.modifiers.indexOf(Modifier.CAREFUL) >= 0) {
+                    factor += .20;
+                }
+
+                if (champ.modifiers.indexOf(Modifier.BAD) >= 0) {
+                    factor -= .15;
+                } else if (champ.modifiers.indexOf(Modifier.GODLIKE) >= 0) {
+                    factor += .15;
+                }
+
+                return (
+                    arr.length
+                    * Math.random()
+                    * factor
+                    * champ.getTraitEffects(Event.TEAMFIGHT_SETUP)
+                );
             })
             .reduce((accumulator: number, current: number) => current + accumulator, 0);
     }
-    const allyPositioning = reducer(allies);
+
+    const allyPositioning = initialAllyPositionValue + reducer(allies);
     const enemyPositioning = reducer(enemies);
 
     // A positive number would mean an ally advantage and a negative number, an enemy advantage
     let combatInitiationModifier = allyPositioning - enemyPositioning;
 
-
+    // TODO:
+    // Decide kills
+    // Record kills, deaths, and assists
 }
 
 export function normalizeChampionName(name: string): string {
@@ -95,6 +116,15 @@ export function normalizeChampionName(name: string): string {
     }
     if (nameLower === 'powder') {
         return 'jinx';
+    }
+    if (nameLower === 'violet') {
+        return 'vi';
+    }
+    if (nameLower === 'mayumi') {
+        return 'bard';
+    }
+    if (nameLower === 'j4' || nameLower === 'jarvan') {
+        return 'jarvaniv';
     }
 
     return nameLower;
