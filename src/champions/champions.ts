@@ -1,5 +1,6 @@
 import { Role } from "./classes";
-import { normalizeChampionName } from "../utils/normalization";
+import { normalizeChampionName } from "../utils/championUtils";
+import { arraysAreEquivalent } from "../utils/utils";
 
 export interface ChampionData {
     name: string,
@@ -166,16 +167,8 @@ export const CHAMPIONS: { [key: string]: Role[] } = {
     Zyra: [Role.MID, Role.SUP],
 };
 
-const championNormalizationMap: any = Object.keys(CHAMPIONS)
+export const championNormalizationMap: any = Object.keys(CHAMPIONS)
     .reduce((accumulator, key) => {
         const normalizedName = normalizeChampionName(key);
         return { ...accumulator, [normalizedName]: key }
     }, {});
-
-export function getChampDataFromUserInput(name: string): ChampionData | null {
-    const properName = championNormalizationMap[name];
-    if (!properName) {
-        return null;
-    }
-    return { name: properName, roles: CHAMPIONS[properName] };
-}

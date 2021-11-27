@@ -1,7 +1,9 @@
 import { CHAMPIONS } from "../champions/champions";
-import { Champion, Alignment, Role } from "../champions/classes"
-import { getChampionFromUser, getRandomObjectKey, getRandomArrayElement } from "../utils/utils";
 import fs from 'fs';
+
+import { Champion, Alignment, Role } from "../champions/classes"
+import { getRandomObjectKey, getRandomArrayElement } from "../utils/utils";
+import { getChampionFromUser } from "../utils/championUtils";
 
 export default class GameState {
     player: Champion | undefined;
@@ -10,13 +12,19 @@ export default class GameState {
 
     constructor() { }
 
-    async startGame() {
+    async initGame() {
         const { data, selectedRole } = await getChampionFromUser();
         this.player = new Champion(data.name, data.roles)
             .setAlignment(Alignment.PLAYER)
             .setRole(selectedRole);
 
         this.setAlliesAndEnemies(this.player);
+
+        return {
+            player: { name: this.player.name, role: this.player.role },
+            allies: this.allies.map(champ => { return { name: champ.name, role: champ.role } }),
+            enemies: this.enemies.map(champ => { return { name: champ.name, role: champ.role } }),
+        }
     }
 
     // TODO:
@@ -26,6 +34,11 @@ export default class GameState {
     // startGameJng(), based on ganking decisions and initiating objectives
     // startGameSup(), based on roaming and whether or not to abandon lane
 
+    private startGameMid() {
+
+    }
+
+    // TODO: make this DRY
     private setAlliesAndEnemies(playerChampion: Champion) {
         const allies: Champion[] = [playerChampion];
         const allyRolesRemaining: Role[] = Object.values(Role);
@@ -33,8 +46,8 @@ export default class GameState {
         const enemies: Champion[] = [];
         const enemyRolesRemaining: Role[] = Object.values(Role);
 
-        const allyIsOffMeta: boolean = Math.random() > 0.8;
-        const enemyIsOffMeta: boolean = Math.random() > 0.9;
+        const allyIsOffMeta: boolean = Math.random() > 0.85;
+        const enemyIsOffMeta: boolean = Math.random() > 0.90;
 
         if (allyIsOffMeta) {
             // Pick a random champion

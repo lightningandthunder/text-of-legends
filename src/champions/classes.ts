@@ -1,9 +1,9 @@
 export enum Role {
     TOP = 'TOP',
     MID = 'MID',
-    ADC = 'ADC', 
-    SUP = 'SUP', 
-    JNG = 'JNG' 
+    ADC = 'ADC',
+    SUP = 'SUP',
+    JNG = 'JNG'
 }
 
 export enum Modifier {
@@ -21,6 +21,15 @@ export enum Alignment {
     ENEMY = 'ENEMY'
 }
 
+export enum Event {
+    KILL = 'KILL',
+    DEATH = 'DEATH',
+    ASSIST = 'ASSIST',
+    TEAMFIGHT = 'TEAMFIGHT',
+    SOLOFIGHT = 'SOLOFIGHT',
+    SPLITPUSH = 'SPLITPUSH'
+}
+
 export class Champion {
     name: string;
     role: Role = Role.TOP;
@@ -28,6 +37,10 @@ export class Champion {
     modifiers: Modifier[] = [];
     alignment: Alignment = Alignment.ALLY;
     strength: number = 0;
+    kills: number = 0;
+    deaths: number = 0;
+    assists: number = 0;
+    uniqueTrait: (a: any) => number = (a) => 1;
 
     constructor(name: string, metaRoles: Role[]) {
         this.name = name;
@@ -43,6 +56,37 @@ export class Champion {
         this.role = role;
         this.initRandomModifiers();
         return this;
+    }
+
+    setUniqueTrait(fun: (a: any) => number) {
+        this.uniqueTrait = fun;
+        return this;
+    }
+
+    getTraitEffects(event: Event): number {
+        return this.uniqueTrait(event);
+    }
+
+    recordKills(kills: number) {
+        const multiplier: number = this.getTraitEffects(Event.KILL);
+        this.kills += kills;
+        this.strength += this.strength > 0
+            ? (kills * 5 * multiplier) + Math.floor(this.strength / 5)
+            : (kills * 5 * multiplier);
+    }
+
+    recordDeath() {
+        const softenFactor: number = this.getTraitEffects(Event.DEATH);
+        this.deaths += 1;
+        this.strength += softenFactor;
+    }
+
+    recordAssists(assists: number) {
+        const multiplier: number = this.getTraitEffects(Event.ASSIST);
+        this.assists += assists;
+        this.strength += this.strength > 0
+            ? (assists * 2 * multiplier) + Math.floor(this.strength / 5)
+            : (assists * 2 * multiplier);
     }
 
     private getRandomPercent(modifier: number = 1) {

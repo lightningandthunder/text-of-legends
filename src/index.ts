@@ -1,9 +1,10 @@
 import GameState from "./game-state/game-state";
-import { updateChampionFiles } from "./utils/utils";
+import { updateChampionFiles } from "./utils/championUtils";
 
 (async () => {
     await updateChampionFiles();
     const game = new GameState();
-    await game.startGame();
-    console.log(JSON.stringify(game, null, 4))
+    const initialGameState = await game.initGame();
+    console.log('Welcome to Summoner\'s Rift! Your initial game state is:');
+    console.log(initialGameState);
 })();
